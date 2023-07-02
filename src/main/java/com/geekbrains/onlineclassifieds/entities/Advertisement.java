@@ -1,37 +1,48 @@
 package com.geekbrains.onlineclassifieds.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Entity
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "advertisements")
 public class Advertisement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     @Column(name = "title")
     private String title;
 
+    @NonNull
     @Column(name = "description")
     private String description;
 
     @Column(name = "price")
-    private double price;
+    private BigDecimal price;
 
+    @NonNull
     @Column(name = "is_paid")
-    private boolean isPaid;
+    private Boolean isPaid;
 
+    @NonNull
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
+    @NonNull
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
 
+    @NonNull
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -39,13 +50,16 @@ public class Advertisement {
     @OneToMany(mappedBy = "advertisement")
     private Collection<Payment> payments;
 
+    @NonNull
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
