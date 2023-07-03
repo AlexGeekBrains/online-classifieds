@@ -28,7 +28,7 @@ public class Advertisement {
     private String description;
 
     @NonNull
-    @Column(name = "userPrice")
+    @Column(name = "user_price")
     private BigDecimal userPrice;
 
     @NonNull
@@ -51,7 +51,7 @@ public class Advertisement {
     @OneToMany(mappedBy = "advertisement")
     private Collection<Payment> payments;
 
-    @NonNull
+//    @NonNull ToDo: decide how to work with categories
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;

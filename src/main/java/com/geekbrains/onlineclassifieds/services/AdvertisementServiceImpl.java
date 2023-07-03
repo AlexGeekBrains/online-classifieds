@@ -26,6 +26,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         advertisementDto.setIsDeleted(false);
         Advertisement advertisement = advertisementConverter.dtoToEntity(advertisementDto, user);
         advertisement.setId(null);
+        advertisement.setCategory(null); // ToDo: temporary, need to decide how to work with categories
         return advertisementRepository.save(advertisement);
     }
 
@@ -36,7 +37,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         advertisement.setTitle(advertisementDto.getTitle());
         advertisement.setDescription(advertisementDto.getDescription());
         advertisement.setUserPrice(advertisementDto.getUserPrice());
-        advertisement.setCategory(advertisementDto.getCategory());
+//        advertisement.setCategory(advertisementDto.getCategory()); ToDo: temporary, need to decide how to work with categories
         return advertisement;
     }
 

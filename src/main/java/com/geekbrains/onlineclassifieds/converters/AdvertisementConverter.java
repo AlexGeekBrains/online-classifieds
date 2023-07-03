@@ -15,8 +15,8 @@ public class AdvertisementConverter {
                 advertisementDto.getIsPaid(),
                 advertisementDto.getIsDeleted(),
                 advertisementDto.getExpirationDate(),
-                user,
-                advertisementDto.getCategory()
+                user
+//                advertisementDto.getCategory() ToDo: temporary, need to decide how to work with categories
         );
     }
 

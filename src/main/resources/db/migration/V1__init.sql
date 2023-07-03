@@ -25,7 +25,7 @@ CREATE TABLE advertisements (
   id         bigserial primary key,
   title VARCHAR(255) NOT NULL,
   description VARCHAR(255) NOT NULL,
-  price DOUBLE NOT NULL,
+  user_price NUMERIC(11, 2) NOT NULL,
   is_paid BOOLEAN NOT NULL,
   is_deleted BOOLEAN NOT NULL,
   expiration_date TIMESTAMP,
@@ -67,7 +67,7 @@ VALUES ('Electronics', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Clothing', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Furniture', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO advertisements (title, description, price, is_paid, is_deleted, expiration_date, user_id, category_id, created_at, updated_at)
+INSERT INTO advertisements (title, description, user_price, is_paid, is_deleted, expiration_date, user_id, category_id, created_at, updated_at)
 VALUES ('iPhone X', 'Brand new iPhone X', 999.99, true, false, NULL, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Sony TV', '55" Smart TV', 799.99, true, false, NULL, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Leather Jacket', 'Stylish leather jacket', 199.99, false, false, NULL, 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
