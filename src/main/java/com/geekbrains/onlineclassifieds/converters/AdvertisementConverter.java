@@ -11,6 +11,7 @@ public class AdvertisementConverter {
         return new Advertisement(
                 advertisementDto.getTitle(),
                 advertisementDto.getDescription(),
+                advertisementDto.getUserPrice(),
                 advertisementDto.getIsPaid(),
                 advertisementDto.getIsDeleted(),
                 advertisementDto.getExpirationDate(),
@@ -24,7 +25,7 @@ public class AdvertisementConverter {
                 advertisement.getId(),
                 advertisement.getTitle(),
                 advertisement.getDescription(),
-                advertisement.getPrice(),
+                advertisement.getUserPrice(),
                 advertisement.getIsPaid(),
                 advertisement.getIsDeleted(),
                 advertisement.getExpirationDate(),

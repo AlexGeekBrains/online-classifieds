@@ -27,8 +27,9 @@ public class Advertisement {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "price")
-    private BigDecimal price;
+    @NonNull
+    @Column(name = "userPrice")
+    private BigDecimal userPrice;
 
     @NonNull
     @Column(name = "is_paid")

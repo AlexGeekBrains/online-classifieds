@@ -11,10 +11,10 @@ import java.util.List;
 public class AdvertisementValidator {
     public void validate(AdvertisementDto advertisementDto) {
         List<String> errors = new ArrayList<>();
-        if (advertisementDto.getPrice() != null) {
-            if (advertisementDto.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
-                errors.add("Advertisement price can't be zero or lower");
-            }
+        if (advertisementDto.getUserPrice() == null) {
+            errors.add("Advertisement price can't be blank");
+        } else if (advertisementDto.getUserPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            errors.add("Advertisement price can't be zero or lower");
         }
         if (advertisementDto.getTitle() == null || advertisementDto.getTitle().isBlank()) {
             errors.add("Advertisement's title can't be blank");

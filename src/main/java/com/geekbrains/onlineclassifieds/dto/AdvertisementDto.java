@@ -21,7 +21,7 @@ public class AdvertisementDto {
 
     private String description;
 
-    private BigDecimal price;
+    private BigDecimal userPrice;
 
     private Boolean isPaid;
 

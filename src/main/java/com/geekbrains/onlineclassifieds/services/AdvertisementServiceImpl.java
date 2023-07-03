@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -36,6 +35,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         Advertisement advertisement = advertisementRepository.findById(advertisementDto.getId()).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + advertisementDto.getId()));
         advertisement.setTitle(advertisementDto.getTitle());
         advertisement.setDescription(advertisementDto.getDescription());
+        advertisement.setUserPrice(advertisementDto.getUserPrice());
         advertisement.setCategory(advertisementDto.getCategory());
         return advertisement;
     }
@@ -45,7 +45,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public void updateToPaid(Long id) {
         Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + id));
         advertisement.setIsPaid(true);
-        advertisement.setPrice(BigDecimal.ONE); // ToDo: DB table with prices
         advertisement.setExpirationDate(advertisement.getExpirationDate().plusDays(7)); // ToDo: days added should depend on the payment
     }
 }
