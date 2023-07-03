@@ -5,7 +5,6 @@ import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.entities.User;
 import com.geekbrains.onlineclassifieds.repositories.AdvertisementRepository;
-import com.geekbrains.onlineclassifieds.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +14,14 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class AdvertisementServiceImpl {
+public class AdvertisementServiceImpl implements AdvertisementService {
     private final AdvertisementRepository advertisementRepository;
     private final AdvertisementConverter advertisementConverter;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
+    @Override
     public Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userService.findByUsername(username);
         advertisementDto.setExpirationDate(LocalDateTime.now().plusDays(1));
         advertisementDto.setIsPaid(false);
         advertisementDto.setIsDeleted(false);
@@ -30,6 +30,7 @@ public class AdvertisementServiceImpl {
         return advertisementRepository.save(advertisement);
     }
 
+    @Override
     @Transactional
     public Advertisement updateAdvertisementInfo(AdvertisementDto advertisementDto) {
         Advertisement advertisement = advertisementRepository.findById(advertisementDto.getId()).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + advertisementDto.getId()));
@@ -39,6 +40,7 @@ public class AdvertisementServiceImpl {
         return advertisement;
     }
 
+    @Override
     @Transactional
     public void updateToPaid(Long id) {
         Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + id));

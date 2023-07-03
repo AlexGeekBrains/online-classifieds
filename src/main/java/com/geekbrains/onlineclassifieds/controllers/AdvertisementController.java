@@ -3,7 +3,7 @@ package com.geekbrains.onlineclassifieds.controllers;
 import com.geekbrains.onlineclassifieds.converters.AdvertisementConverter;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
-import com.geekbrains.onlineclassifieds.services.AdvertisementServiceImpl;
+import com.geekbrains.onlineclassifieds.services.AdvertisementService;
 import com.geekbrains.onlineclassifieds.validators.AdvertisementValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/advertisements")
 @RequiredArgsConstructor
 public class AdvertisementController {
-    private final AdvertisementServiceImpl advertisementService;
+    private final AdvertisementService advertisementService;
     private final AdvertisementValidator advertisementValidator;
     private final AdvertisementConverter advertisementConverter;
 
