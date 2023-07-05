@@ -2,7 +2,6 @@ package com.geekbrains.onlineclassifieds.services;
 
 import com.geekbrains.onlineclassifieds.converters.AdvertisementConverter;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
-import com.geekbrains.onlineclassifieds.dto.AdvertisementDtoRes;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.entities.Category;
 import com.geekbrains.onlineclassifieds.entities.User;
@@ -29,7 +28,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username) {
-        User user = userService.findByUsername(username); //ToDo переделать на userId добавить обработку если id не найден
+        User user = userService.findByUsername(username);
         advertisementDto.setExpirationDate(LocalDateTime.now().plusDays(1));
         advertisementDto.setIsPaid(false);
         advertisementDto.setIsDeleted(false);
@@ -59,7 +58,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
-    public Page<AdvertisementDtoRes> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page) {
+    public Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page) {
         Specification<Advertisement> specification = Specification.where(AdvertisementSpecifications.isNotDeleted());
         if (categoryId != null) {
             Optional<Category> categoryOptional = categoryService.getCategoryById(categoryId);
@@ -79,6 +78,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (partTitle != null) {
             specification = specification.and(AdvertisementSpecifications.titleLike(partTitle));
         }
-        return advertisementRepository.findAll(specification, PageRequest.of(page, 10)).map(advertisementConverter::entityToDtoRes);
+        return advertisementRepository.findAll(specification, PageRequest.of(page, 10)).map(advertisementConverter::entityToDto);
     }
 }

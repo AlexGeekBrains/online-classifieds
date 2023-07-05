@@ -2,7 +2,6 @@ package com.geekbrains.onlineclassifieds.controllers;
 
 import com.geekbrains.onlineclassifieds.converters.AdvertisementConverter;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
-import com.geekbrains.onlineclassifieds.dto.AdvertisementDtoRes;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.services.AdvertisementService;
 import com.geekbrains.onlineclassifieds.validators.AdvertisementValidator;
@@ -41,13 +40,13 @@ public class AdvertisementController {
     }
 
     @GetMapping("/get-advertisements")
-    public ResponseEntity<Page<AdvertisementDtoRes>> filterAdvertisements(
+    public ResponseEntity<Page<AdvertisementDto>> filterAdvertisements(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String partTitle,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(defaultValue = "0") Integer page) {
-        Page<AdvertisementDtoRes> filteredAdvertisements = advertisementService.findAllWithFilter(minPrice, maxPrice, partTitle, categoryId, page);
+        Page<AdvertisementDto> filteredAdvertisements = advertisementService.findAllWithFilter(minPrice, maxPrice, partTitle, categoryId, page);
         return ResponseEntity.ok(filteredAdvertisements);
     }
 }

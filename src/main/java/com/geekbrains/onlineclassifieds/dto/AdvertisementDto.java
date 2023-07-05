@@ -31,11 +31,5 @@ public class AdvertisementDto {
 
     private LocalDateTime expirationDate;
 
-    private Collection<Payment> payments;
-
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Category category;
-
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private User user;
+    private CategoryDto categoryDto;
 }

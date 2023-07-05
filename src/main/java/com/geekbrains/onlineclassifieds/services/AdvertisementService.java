@@ -1,7 +1,6 @@
 package com.geekbrains.onlineclassifieds.services;
 
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
-import com.geekbrains.onlineclassifieds.dto.AdvertisementDtoRes;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import org.springframework.data.domain.Page;
 
@@ -14,5 +13,5 @@ public interface AdvertisementService {
 
     void updateToPaid(Long id);
 
-    Page<AdvertisementDtoRes> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page);
+    Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page);
 }
