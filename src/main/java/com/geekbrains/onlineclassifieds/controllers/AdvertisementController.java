@@ -2,11 +2,16 @@ package com.geekbrains.onlineclassifieds.controllers;
 
 import com.geekbrains.onlineclassifieds.converters.AdvertisementConverter;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
+import com.geekbrains.onlineclassifieds.dto.AdvertisementDtoRes;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.services.AdvertisementService;
 import com.geekbrains.onlineclassifieds.validators.AdvertisementValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("api/v1/advertisements")
@@ -33,5 +38,16 @@ public class AdvertisementController {
     @PutMapping("/{id}")
     public void updateToPaid(@PathVariable Long id) {
         advertisementService.updateToPaid(id);
+    }
+
+    @GetMapping("/get-advertisements")
+    public ResponseEntity<Page<AdvertisementDtoRes>> filterAdvertisements(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String partTitle,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(defaultValue = "0") Integer page) {
+        Page<AdvertisementDtoRes> filteredAdvertisements = advertisementService.findAllWithFilter(minPrice, maxPrice, partTitle, categoryId, page);
+        return ResponseEntity.ok(filteredAdvertisements);
     }
 }

@@ -1,5 +1,6 @@
 package com.geekbrains.onlineclassifieds.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,9 +34,11 @@ public class User {
     private Collection<Role> roles;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Collection<Advertisement> advertisements;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Collection<Payment> payments;
 
     @CreationTimestamp

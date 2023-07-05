@@ -1,5 +1,6 @@
 package com.geekbrains.onlineclassifieds.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,15 +45,18 @@ public class Advertisement {
     private LocalDateTime expirationDate;
 
     @NonNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "advertisement")
+    @JsonIgnore
     private Collection<Payment> payments;
 
-//    @NonNull ToDo: decide how to work with categories
-    @ManyToOne
+   // @NonNull ToDo: decide how to work with categories
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "category_id")
     private Category category;
 
