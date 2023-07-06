@@ -22,7 +22,7 @@ public class AdvertisementValidator {
         if (advertisementDto.getDescription() == null || advertisementDto.getDescription().isBlank()) {
             errors.add("Advertisement's description can't be blank");
         }
-        if (advertisementDto.getCategory() == null) {
+        if (advertisementDto.getCategoryDto() == null) {
             errors.add("Advertisement's category can't be blank");
         }
         if (!errors.isEmpty()) {

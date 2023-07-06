@@ -3,10 +3,15 @@ package com.geekbrains.onlineclassifieds.converters;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.entities.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+
 @Component
+@RequiredArgsConstructor
 public class AdvertisementConverter {
+    private final CategoryConverter categoryConverter;
+
     public Advertisement dtoToEntity(AdvertisementDto advertisementDto, User user) {
         return new Advertisement(
                 advertisementDto.getTitle(),
@@ -16,7 +21,7 @@ public class AdvertisementConverter {
                 advertisementDto.getIsDeleted(),
                 advertisementDto.getExpirationDate(),
                 user
-//                advertisementDto.getCategory() ToDo: temporary, need to decide how to work with categories
+                //   advertisementDto.getCategory() ToDo: temporary, need to decide how to work with categories
         );
     }
 
@@ -29,8 +34,7 @@ public class AdvertisementConverter {
                 advertisement.getIsPaid(),
                 advertisement.getIsDeleted(),
                 advertisement.getExpirationDate(),
-                advertisement.getPayments(),
-                advertisement.getCategory()
+                categoryConverter.entityToDto(advertisement.getCategory())
         );
     }
 }

@@ -1,7 +1,9 @@
 package com.geekbrains.onlineclassifieds.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.geekbrains.onlineclassifieds.entities.Category;
 import com.geekbrains.onlineclassifieds.entities.Payment;
+import com.geekbrains.onlineclassifieds.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +31,5 @@ public class AdvertisementDto {
 
     private LocalDateTime expirationDate;
 
-    private Collection<Payment> payments;
-
-    private Category category;
+    private CategoryDto categoryDto;
 }
