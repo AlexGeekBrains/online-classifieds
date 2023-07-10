@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +27,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final UserService userService;
     private final CategoryService categoryService;
 
+    public List<Advertisement> getAllAdvertisements() {
+        return advertisementRepository.findAll();
+    }
+    public Optional<Advertisement> findById(Long id) {
+        return advertisementRepository.findById(id);
+    }
     @Override
     public Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username) {
         User user = userService.findByUsername(username);
@@ -34,7 +41,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         advertisementDto.setIsDeleted(false);
         Advertisement advertisement = advertisementConverter.dtoToEntity(advertisementDto, user);
         advertisement.setId(null);
-        advertisement.setCategory(null); // ToDo: temporary, need to decide how to work with categories
+       // advertisement.setCategory(null); // ToDo: temporary, need to decide how to work with categories
         return advertisementRepository.save(advertisement);
     }
 
