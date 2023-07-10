@@ -28,28 +28,24 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username) {
-        User user = userService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("selected username not found (not found in the DB): " + username));
+        User user = userService.findByUsername(username);
         advertisementDto.setExpirationDate(LocalDateTime.now().plusDays(1));
         advertisementDto.setIsPaid(false);
         advertisementDto.setIsDeleted(false);
         Advertisement advertisement = advertisementConverter.dtoToEntity(advertisementDto, user);
         advertisement.setId(null);
-        String categoryName = advertisementDto.getCategoryDto().getName();
-        Category category = categoryService.getCategoryByName(categoryName)
-                .orElseThrow(() -> new IllegalArgumentException("Can't save the product, category not found: " + categoryName));
-        advertisement.setCategory(category);
+        advertisement.setCategory(null); // ToDo: temporary, need to decide how to work with categories
         return advertisementRepository.save(advertisement);
     }
 
     @Override
     @Transactional
-    public Advertisement updateAdvertisementInfo(Long id, AdvertisementDto advertisementDto) {
-        Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + id));
+    public Advertisement updateAdvertisementInfo(AdvertisementDto advertisementDto) {
+        Advertisement advertisement = advertisementRepository.findById(advertisementDto.getId()).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + advertisementDto.getId()));
         advertisement.setTitle(advertisementDto.getTitle());
         advertisement.setDescription(advertisementDto.getDescription());
         advertisement.setUserPrice(advertisementDto.getUserPrice());
-        String categoryName = advertisementDto.getCategoryDto().getName();
-        advertisement.setCategory(categoryService.getCategoryByName(categoryName).orElseThrow(() -> new IllegalArgumentException("Can't update the product, category not found: " + categoryName)));
+//        advertisement.setCategory(advertisementDto.getCategory()); ToDo: temporary, need to decide how to work with categories
         return advertisement;
     }
 
@@ -58,11 +54,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public void updateToPaid(Long id) {
         Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + id));
         advertisement.setIsPaid(true);
-        if (advertisement.getExpirationDate() == null) { // ToDo: Idea says it can't be null, which is technically true; but it is created null in initialization. Temporary.
-            advertisement.setExpirationDate(LocalDateTime.now().plusDays(7));
-        } else {
-            advertisement.setExpirationDate(advertisement.getExpirationDate().plusDays(7)); // ToDo: days added should depend on the payment
-        }
+        advertisement.setExpirationDate(advertisement.getExpirationDate().plusDays(7)); // ToDo: days added should depend on the payment
     }
 
     @Override
