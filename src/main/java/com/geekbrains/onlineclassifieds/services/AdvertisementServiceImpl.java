@@ -28,13 +28,15 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username) {
-        User user = userService.findByUsername(username);
+        User user = userService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("selected username not found (not found in the DB): " + username));
         advertisementDto.setExpirationDate(LocalDateTime.now().plusDays(1));
         advertisementDto.setIsPaid(false);
         advertisementDto.setIsDeleted(false);
         Advertisement advertisement = advertisementConverter.dtoToEntity(advertisementDto, user);
         advertisement.setId(null);
-        advertisement.setCategory(null); // ToDo: temporary, need to decide how to work with categories
+        Category category = categoryService.getCategoryById(advertisementDto.getCategoryDto().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Can't save the product, category not found: " + advertisementDto.getCategoryDto().getId()));
+        advertisement.setCategory(category);
         return advertisementRepository.save(advertisement);
     }
 

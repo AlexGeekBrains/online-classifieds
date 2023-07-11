@@ -37,3 +37,4 @@ build/
 /.mvn/
 /data/
 /.idea/
+/online-classifieds_db.trace.db

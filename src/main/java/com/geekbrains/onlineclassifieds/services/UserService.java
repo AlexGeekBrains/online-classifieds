@@ -1,7 +1,10 @@
 package com.geekbrains.onlineclassifieds.services;
 
 import com.geekbrains.onlineclassifieds.entities.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
-    User findByUsername(String username);
+import java.util.Optional;
+
+public interface UserService extends UserDetailsService {
+    Optional<User> findByUsername(String username);
 }
