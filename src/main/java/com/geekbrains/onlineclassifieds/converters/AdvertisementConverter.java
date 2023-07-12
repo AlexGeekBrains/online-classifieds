@@ -6,8 +6,6 @@ import com.geekbrains.onlineclassifieds.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 
 @Component
 @RequiredArgsConstructor
