@@ -1,16 +1,11 @@
 package com.geekbrains.onlineclassifieds.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.geekbrains.onlineclassifieds.entities.Category;
-import com.geekbrains.onlineclassifieds.entities.Payment;
-import com.geekbrains.onlineclassifieds.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -31,5 +26,5 @@ public class AdvertisementDto {
 
     private LocalDateTime expirationDate;
 
-    private CategoryDto categoryDto;
+    private CategoryDto categoryDto; // ToDo: Need to talk about it (-> new / update Adv)
 }
