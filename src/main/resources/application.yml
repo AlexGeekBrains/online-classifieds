@@ -18,6 +18,8 @@ spring:
       enabled: true
       settings:
         web-allow-others: false
+jwt:
+  lifetime: 36000000
 #spring: настройка под postgres
 #  datasource:
 #    url: jdbc:postgresql://localhost:5432/classifieds_db

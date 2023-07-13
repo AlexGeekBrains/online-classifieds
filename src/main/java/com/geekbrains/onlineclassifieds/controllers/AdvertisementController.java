@@ -4,6 +4,7 @@ import com.geekbrains.onlineclassifieds.converters.AdvertisementConverter;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.services.AdvertisementService;
+import com.geekbrains.onlineclassifieds.utils.JwtTokenUtil;
 import com.geekbrains.onlineclassifieds.validators.AdvertisementValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,11 +20,12 @@ public class AdvertisementController {
     private final AdvertisementService advertisementService;
     private final AdvertisementValidator advertisementValidator;
     private final AdvertisementConverter advertisementConverter;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping
-    public AdvertisementDto saveNewAdvertisement(@RequestBody AdvertisementDto advertisementDto, @RequestHeader(name = "username") String user) {
+    @PostMapping()
+    public AdvertisementDto saveNewAdvertisement(@RequestBody AdvertisementDto advertisementDto, @RequestHeader(name = "Authorization") String token) {
         advertisementValidator.validate(advertisementDto);
-        Advertisement advertisement = advertisementService.saveNewAdvertisement(advertisementDto, user); // ToDo: is "username" header safe?
+        Advertisement advertisement = advertisementService.saveNewAdvertisement(advertisementDto, jwtTokenUtil.getUsernameFromToken(token));
         return advertisementConverter.entityToDto(advertisement);
     }
 
