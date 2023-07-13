@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public interface AdvertisementService {
     Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username);
 
-    Advertisement updateAdvertisementInfo(AdvertisementDto advertisementDto);
+    Advertisement updateAdvertisementInfo(Long id, AdvertisementDto advertisementDto);
 
     void updateToPaid(Long id);
 

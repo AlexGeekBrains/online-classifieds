@@ -1,5 +1,7 @@
 package com.geekbrains.onlineclassifieds.services;
 
+import com.geekbrains.onlineclassifieds.dto.RegistrationUserDto;
+import com.geekbrains.onlineclassifieds.dto.RoleConstants;
 import com.geekbrains.onlineclassifieds.entities.Role;
 import com.geekbrains.onlineclassifieds.entities.User;
 import com.geekbrains.onlineclassifieds.repositories.UserRepository;
@@ -8,10 +10,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,9 +23,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
+    @Override
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
     @Override
     @Transactional
@@ -32,6 +43,16 @@ public class UserServiceImpl implements UserService {
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void createUser(RegistrationUserDto registrationUserDto) {
+        User user = new User();
+        user.setUsername(registrationUserDto.username());
+        user.setEmail(registrationUserDto.email());
+        user.setPassword(passwordEncoder.encode(registrationUserDto.password()));
+        user.setRoles(List.of(roleService.findByName(RoleConstants.ROLE_USER).get())); // instead of '.get()' can use 'orElseThrow(() -> new RoleNotFoundException(String.format("Role '%s' not found", constants.getROLE_USER())))'
+        userRepository.save(user);
     }
 
 }

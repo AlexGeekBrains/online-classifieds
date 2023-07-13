@@ -29,14 +29,14 @@ public class AdvertisementController {
         return advertisementConverter.entityToDto(advertisement);
     }
 
-    @PutMapping
-    public AdvertisementDto updateAdvertisement(@RequestBody AdvertisementDto advertisementDto) {
+    @PutMapping("/{id}")
+    public AdvertisementDto updateAdvertisement(@PathVariable Long id, @RequestBody AdvertisementDto advertisementDto) {
         advertisementValidator.validate(advertisementDto);
-        Advertisement advertisement = advertisementService.updateAdvertisementInfo(advertisementDto);
+        Advertisement advertisement = advertisementService.updateAdvertisementInfo(id, advertisementDto);
         return advertisementConverter.entityToDto(advertisement);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/paid")
     public void updateToPaid(@PathVariable Long id) {
         advertisementService.updateToPaid(id);
     }
