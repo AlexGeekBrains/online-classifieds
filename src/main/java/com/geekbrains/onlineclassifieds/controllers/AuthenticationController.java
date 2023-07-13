@@ -26,7 +26,7 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-    private final UserService userDetailsService;
+    private final UserService userService;
     private final RegistrationValidator registrationValidator;
 
     @PostMapping()
@@ -39,7 +39,7 @@ public class AuthenticationController {
             throw new BadCredentialsException("INVALID_CREDENTIALS", e);
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new JwtResponse(token));
@@ -55,13 +55,13 @@ public class AuthenticationController {
         if (!registrationUserDto.password().equals(registrationUserDto.confirmPassword())) {
             return new ResponseEntity<>("Passwords don't match, please try again!", HttpStatus.BAD_REQUEST);
         }
-        if (userDetailsService.findByUsername(registrationUserDto.username()).isPresent()) {
+        if (userService.findByUsername(registrationUserDto.username()).isPresent()) {
             return new ResponseEntity<>("Username is taken, please try another one!", HttpStatus.BAD_REQUEST);
         }
-        if (userDetailsService.findUserByEmail(registrationUserDto.email()).isPresent()) {
+        if (userService.findUserByEmail(registrationUserDto.email()).isPresent()) {
             return new ResponseEntity<>("Email is already registered, please restore password if needed!", HttpStatus.BAD_REQUEST);
         }
-        userDetailsService.createUser(registrationUserDto);
+        userService.createUser(registrationUserDto);
         return ResponseEntity.ok("Registration successful! Please, log in.");
     }
 }

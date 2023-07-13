@@ -1,7 +1,7 @@
 package com.geekbrains.onlineclassifieds.services;
 
-import com.geekbrains.onlineclassifieds.dto.Constants;
 import com.geekbrains.onlineclassifieds.dto.RegistrationUserDto;
+import com.geekbrains.onlineclassifieds.dto.RoleConstants;
 import com.geekbrains.onlineclassifieds.entities.Role;
 import com.geekbrains.onlineclassifieds.entities.User;
 import com.geekbrains.onlineclassifieds.repositories.UserRepository;
@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
-    private final Constants constants;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -52,7 +51,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(registrationUserDto.username());
         user.setEmail(registrationUserDto.email());
         user.setPassword(passwordEncoder.encode(registrationUserDto.password()));
-        user.setRoles(List.of(roleService.findByName(constants.getROLE_USER()).get())); // instead of '.get()' can use 'orElseThrow(() -> new RoleNotFoundException(String.format("User '%s' not found", constants.getROLE_USER())))'
+        user.setRoles(List.of(roleService.findByName(RoleConstants.ROLE_USER).get())); // instead of '.get()' can use 'orElseThrow(() -> new RoleNotFoundException(String.format("Role '%s' not found", constants.getROLE_USER())))'
         userRepository.save(user);
     }
 
