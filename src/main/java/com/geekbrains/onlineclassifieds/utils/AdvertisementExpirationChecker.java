@@ -15,6 +15,6 @@ public class AdvertisementExpirationChecker {
     @Scheduled(fixedDelay = 600000) // Запуск каждые 10 минут (600 000 миллисекунд)
     public void updateExpiredAdvertisements() {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        advertisementService.updateExpiredAdvertisements(currentDateTime);
+        advertisementService.updateExpiredAdvertisements(currentDateTime, 10);
     }
 }

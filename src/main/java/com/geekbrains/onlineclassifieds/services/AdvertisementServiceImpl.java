@@ -10,6 +10,7 @@ import com.geekbrains.onlineclassifieds.repositories.specifications.Advertisemen
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -94,8 +94,17 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     @Transactional
-    public void updateExpiredAdvertisements(LocalDateTime currentDateTime) {
-        List<Advertisement> expiredAdvertisements = advertisementRepository.findByExpirationDateBeforeAndIsDeletedFalse(currentDateTime);
+    public void updateExpiredAdvertisements(LocalDateTime currentDateTime, int pageSize) {
+        Pageable pageable = PageRequest.of(0, pageSize);
+        Page<Advertisement> expiredAdvertisementsPage;
+        do {
+            expiredAdvertisementsPage = advertisementRepository.findByExpirationDateBeforeAndIsDeletedFalse(currentDateTime, pageable);
+            List<Advertisement> expiredAdvertisements = expiredAdvertisementsPage.getContent();
+            processExpiredAdvertisements(expiredAdvertisements);
+        } while (expiredAdvertisementsPage.hasNext());
+    }
+
+    private void processExpiredAdvertisements(List<Advertisement> expiredAdvertisements) {
         expiredAdvertisements.forEach(advertisement -> {
             advertisement.setIsDeleted(true);
             advertisementRepository.save(advertisement);

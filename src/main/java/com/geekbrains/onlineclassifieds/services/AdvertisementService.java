@@ -16,5 +16,5 @@ public interface AdvertisementService {
 
     Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page, Boolean isNotDeleted, Boolean isNotExpiredYet);
 
-    void updateExpiredAdvertisements(LocalDateTime currentDateTime);
+    void updateExpiredAdvertisements(LocalDateTime currentDateTime, int pageSize);
 }
