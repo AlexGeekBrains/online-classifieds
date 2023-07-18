@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,6 +69,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Override
     public Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page) {
         Specification<Advertisement> specification = Specification.where(AdvertisementSpecifications.isNotDeleted());
+        specification = specification.and(AdvertisementSpecifications.isNotExpiredYet(LocalDateTime.now()));
         if (categoryId != null) {
             Optional<Category> categoryOptional = categoryService.getCategoryById(categoryId);
             if (categoryOptional.isPresent()) {
@@ -87,5 +89,15 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             specification = specification.and(AdvertisementSpecifications.titleLike(partTitle));
         }
         return advertisementRepository.findAll(specification, PageRequest.of(page, 10)).map(advertisementConverter::entityToDto);
+    }
+
+    @Override
+    @Transactional
+    public void updateExpiredAdvertisements(LocalDateTime currentDateTime) {
+        List<Advertisement> expiredAdvertisements = advertisementRepository.findByExpirationDateBeforeAndIsDeletedFalse(currentDateTime);
+        expiredAdvertisements.forEach(advertisement -> {
+            advertisement.setIsDeleted(true);
+            advertisementRepository.save(advertisement);
+        });
     }
 }

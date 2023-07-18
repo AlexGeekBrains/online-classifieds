@@ -4,7 +4,6 @@ import com.geekbrains.onlineclassifieds.converters.AdvertisementConverter;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.services.AdvertisementService;
-import com.geekbrains.onlineclassifieds.utils.JwtTokenUtil;
 import com.geekbrains.onlineclassifieds.validators.AdvertisementValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("api/v1/advertisements")
@@ -20,12 +20,11 @@ public class AdvertisementController {
     private final AdvertisementService advertisementService;
     private final AdvertisementValidator advertisementValidator;
     private final AdvertisementConverter advertisementConverter;
-    private final JwtTokenUtil jwtTokenUtil;
 
     @PostMapping()
-    public AdvertisementDto saveNewAdvertisement(@RequestBody AdvertisementDto advertisementDto, @RequestHeader(name = "Authorization") String token) {
+    public AdvertisementDto saveNewAdvertisement(@RequestBody AdvertisementDto advertisementDto, Principal principal) {
         advertisementValidator.validate(advertisementDto);
-        Advertisement advertisement = advertisementService.saveNewAdvertisement(advertisementDto, jwtTokenUtil.getUsernameFromToken(token));
+        Advertisement advertisement = advertisementService.saveNewAdvertisement(advertisementDto, principal.getName());
         return advertisementConverter.entityToDto(advertisement);
     }
 
