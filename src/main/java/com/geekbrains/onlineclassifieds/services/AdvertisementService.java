@@ -14,7 +14,7 @@ public interface AdvertisementService {
 
     void updateToPaid(Long id);
 
-    Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page);
+    Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page, Boolean isNotDeleted, Boolean isNotExpiredYet);
 
     void updateExpiredAdvertisements(LocalDateTime currentDateTime);
 }

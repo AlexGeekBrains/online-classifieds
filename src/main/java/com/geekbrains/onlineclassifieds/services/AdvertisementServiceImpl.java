@@ -67,17 +67,18 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
-    public Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page) {
-        Specification<Advertisement> specification = Specification.where(AdvertisementSpecifications.isNotDeleted());
-        specification = specification.and(AdvertisementSpecifications.isNotExpiredYet(LocalDateTime.now()));
+    public Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page, Boolean isNotDeleted, Boolean isNotExpiredYet) {
+        Specification<Advertisement> specification = Specification.where(null);
+        if (isNotDeleted != null && isNotDeleted) {
+            specification = specification.and(AdvertisementSpecifications.isNotDeleted());
+        }
+        if (isNotExpiredYet != null && isNotExpiredYet) {
+            specification = specification.and(AdvertisementSpecifications.isNotExpiredYet(LocalDateTime.now()));
+        }
         if (categoryId != null) {
-            Optional<Category> categoryOptional = categoryService.getCategoryById(categoryId);
-            if (categoryOptional.isPresent()) {
-                Category category = categoryOptional.get();
-                specification = specification.and(AdvertisementSpecifications.hasCategory(category));
-            } else {
-                throw new IllegalArgumentException("selected category not found (not found in the DB) id: " + categoryId);
-            }
+            Category category = categoryService.getCategoryById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Selected category not found (not found in the DB) id: " + categoryId));
+            specification = specification.and(AdvertisementSpecifications.hasCategory(category));
         }
         if (maxPrice != null) {
             specification = specification.and(AdvertisementSpecifications.lessThanOrEqualToPrice(maxPrice));
