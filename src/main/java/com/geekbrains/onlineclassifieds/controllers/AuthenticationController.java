@@ -52,15 +52,6 @@ public class AuthenticationController {
     @PostMapping("/registration")
     public ResponseEntity<?> registerUser(@RequestBody RegistrationUserDto registrationUserDto) {
         registrationValidator.validate(registrationUserDto); // ToDo: Front should be controlling it too
-        if (!registrationUserDto.password().equals(registrationUserDto.confirmPassword())) {
-            return new ResponseEntity<>("Passwords don't match, please try again!", HttpStatus.BAD_REQUEST);
-        }
-        if (userService.findByUsername(registrationUserDto.username()).isPresent()) {
-            return new ResponseEntity<>("Username is taken, please try another one!", HttpStatus.BAD_REQUEST);
-        }
-        if (userService.findUserByEmail(registrationUserDto.email()).isPresent()) {
-            return new ResponseEntity<>("Email is already registered, please restore password if needed!", HttpStatus.BAD_REQUEST);
-        }
         userService.createUser(registrationUserDto);
         return ResponseEntity.ok("Registration successful! Please, log in.");
     }

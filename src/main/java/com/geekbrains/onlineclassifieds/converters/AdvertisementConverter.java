@@ -2,6 +2,7 @@ package com.geekbrains.onlineclassifieds.converters;
 
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
+import com.geekbrains.onlineclassifieds.entities.Category;
 import com.geekbrains.onlineclassifieds.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class AdvertisementConverter {
     private final CategoryConverter categoryConverter;
 
-    public Advertisement dtoToEntity(AdvertisementDto advertisementDto, User user) {
+    public Advertisement dtoToEntity(AdvertisementDto advertisementDto, User user, Category category) {
         return new Advertisement(
                 advertisementDto.getTitle(),
                 advertisementDto.getDescription(),
@@ -20,8 +21,8 @@ public class AdvertisementConverter {
                 advertisementDto.getIsPaid(),
                 advertisementDto.getIsDeleted(),
                 advertisementDto.getExpirationDate(),
-                user
-                //   advertisementDto.getCategory() ToDo: temporary, need to decide how to work with categories
+                user,
+                category
         );
     }
 
