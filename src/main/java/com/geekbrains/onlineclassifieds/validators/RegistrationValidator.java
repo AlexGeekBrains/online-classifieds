@@ -4,8 +4,6 @@ import com.geekbrains.onlineclassifieds.exceptions.FieldsValidationException;
 import com.geekbrains.onlineclassifieds.dto.RegistrationUserDto;
 import com.geekbrains.onlineclassifieds.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

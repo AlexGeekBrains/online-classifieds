@@ -7,7 +7,6 @@ import com.geekbrains.onlineclassifieds.services.UserService;
 import com.geekbrains.onlineclassifieds.utils.JwtTokenUtil;
 import com.geekbrains.onlineclassifieds.validators.RegistrationValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
