@@ -6,12 +6,18 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Repository
 public interface AdvertisementSpecifications {
     static Specification<Advertisement> isNotDeleted() {
         return (root, query, builder) ->
                 builder.equal(root.get("isDeleted"), false);
+    }
+
+    static Specification<Advertisement> isNotExpiredYet(LocalDateTime localDateTime) {
+        return (root, query, builder) ->
+                builder.greaterThan(root.get("expirationDate"), localDateTime);
     }
 
     static Specification<Advertisement> hasCategory(Category category) {
