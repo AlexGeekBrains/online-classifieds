@@ -3,14 +3,16 @@ package com.geekbrains.onlineclassifieds.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-@Entity
 @Data
+@NoArgsConstructor
+@Entity
 @Table(name = "users")
 public class User {
     @Id
@@ -48,4 +50,5 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
 }

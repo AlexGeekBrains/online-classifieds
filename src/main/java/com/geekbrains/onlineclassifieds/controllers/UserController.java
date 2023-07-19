@@ -1,30 +1,34 @@
 package com.geekbrains.onlineclassifieds.controllers;
 
-import com.geekbrains.onlineclassifieds.entities.Advertisement;
+import com.geekbrains.onlineclassifieds.converters.UserConverter;
+import com.geekbrains.onlineclassifieds.dto.UserDto;
 import com.geekbrains.onlineclassifieds.entities.User;
-import com.geekbrains.onlineclassifieds.services.AdvertisementServiceImpl;
 import com.geekbrains.onlineclassifieds.services.UserService;
 import com.geekbrains.onlineclassifieds.services.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("api/v1/users")
+@Component
 @RequiredArgsConstructor
+
 public class UserController {
     private final UserService userService;
-
-    private final UserServiceImpl userServiceImpl;
-
-    @GetMapping()
-    public List<User> showUsers() {
-        return userServiceImpl.getAllUsers();
+    @GetMapping("/get-users")
+    public ResponseEntity<Page<UserDto>> filterUsers(
+            @RequestParam(required = false) String partUsername,
+            @RequestParam(required = false) String partEmail,
+            @RequestParam(required = false) LocalDateTime partCreatedAt,
+            @RequestParam(required = false) LocalDateTime partUpdatedAt,
+            @RequestParam(defaultValue = "0") Integer page) {
+        Page<UserDto> filteredUsers = userService.findAllUserWithFilter(partUsername, partEmail, partCreatedAt, partUpdatedAt, page);
+        return ResponseEntity.ok(filteredUsers);
     }
-
 }

@@ -1,8 +1,6 @@
 package com.geekbrains.onlineclassifieds.services;
 
-import com.geekbrains.onlineclassifieds.dto.RegistrationUserDto;
 import com.geekbrains.onlineclassifieds.entities.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 
