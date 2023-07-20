@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +37,8 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws EntityNotFoundException {
-        User user = findByUsername(username).orElseThrow(() -> new EntityNotFoundException(String.format("User '%s' not found", username)));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(registrationUserDto.username());
         user.setEmail(registrationUserDto.email());
         user.setPassword(passwordEncoder.encode(registrationUserDto.password()));
-        user.setRoles(List.of(roleService.findByName(RoleConstants.ROLE_USER).get())); // instead of '.get()' can use 'orElseThrow(() -> new EntityNotFoundException(String.format("Role '%s' not found", constants.getROLE_USER())))'
+        user.setRoles(List.of(roleService.findByName(RoleConstants.ROLE_USER).orElseThrow(() -> new EntityNotFoundException(String.format("Role '%s' not found", RoleConstants.ROLE_USER)))));
         userRepository.save(user);
     }
 
