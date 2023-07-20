@@ -89,7 +89,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (partTitle != null) {
             specification = specification.and(AdvertisementSpecifications.titleLike(partTitle));
         }
-        return advertisementRepository.findAll(specification, PageRequest.of(page, 10)).map(advertisementConverter::entityToDto);
+        return advertisementRepository.findAll(specification, PageRequest.of(page-1, 10)).map(advertisementConverter::entityToDto);
     }
 
     @Override
