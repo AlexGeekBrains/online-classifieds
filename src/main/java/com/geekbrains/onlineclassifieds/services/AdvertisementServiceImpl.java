@@ -7,6 +7,7 @@ import com.geekbrains.onlineclassifieds.entities.Category;
 import com.geekbrains.onlineclassifieds.entities.User;
 import com.geekbrains.onlineclassifieds.repositories.AdvertisementRepository;
 import com.geekbrains.onlineclassifieds.repositories.specifications.AdvertisementSpecifications;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,35 +30,34 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username) {
-        User user = userService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("selected username not found (not found in the DB): " + username));
+        User user = userService.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("Selected username not found (not found in the DB): " + username));
         advertisementDto.setExpirationDate(LocalDateTime.now().plusDays(1));
         advertisementDto.setIsPaid(false);
         advertisementDto.setIsDeleted(false);
-        Advertisement advertisement = advertisementConverter.dtoToEntity(advertisementDto, user);
-        advertisement.setId(null);
         String categoryName = advertisementDto.getCategoryDto().getName();
         Category category = categoryService.getCategoryByName(categoryName)
-                .orElseThrow(() -> new IllegalArgumentException("Can't save the product, category not found: " + categoryName));
-        advertisement.setCategory(category);
+                .orElseThrow(() -> new EntityNotFoundException("Can't save the product, category not found: " + categoryName));
+        Advertisement advertisement = advertisementConverter.dtoToEntity(advertisementDto, user, category);
+        advertisement.setId(null);
         return advertisementRepository.save(advertisement);
     }
 
     @Override
     @Transactional
     public Advertisement updateAdvertisementInfo(Long id, AdvertisementDto advertisementDto) {
-        Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + id));
+        Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Can't update the product (not found in the DB) id: " + id));
         advertisement.setTitle(advertisementDto.getTitle());
         advertisement.setDescription(advertisementDto.getDescription());
         advertisement.setUserPrice(advertisementDto.getUserPrice());
         String categoryName = advertisementDto.getCategoryDto().getName();
-        advertisement.setCategory(categoryService.getCategoryByName(categoryName).orElseThrow(() -> new IllegalArgumentException("Can't update the product, category not found: " + categoryName)));
+        advertisement.setCategory(categoryService.getCategoryByName(categoryName).orElseThrow(() -> new EntityNotFoundException("Can't update the product, category not found: " + categoryName)));
         return advertisement;
     }
 
     @Override
     @Transactional
     public void updateToPaid(Long id) {
-        Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Can't update the product (not found in the DB) id: " + id));
+        Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Can't update the product (not found in the DB) id: " + id));
         advertisement.setIsPaid(true);
         if (advertisement.getExpirationDate() == null) { // ToDo: Idea says it can't be null, which is technically true; but it is created null in initialization. Temporary.
             advertisement.setExpirationDate(LocalDateTime.now().plusDays(7));
@@ -77,7 +77,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
         if (categoryId != null) {
             Category category = categoryService.getCategoryById(categoryId)
-                    .orElseThrow(() -> new IllegalArgumentException("Selected category not found (not found in the DB) id: " + categoryId));
+                    .orElseThrow(() -> new EntityNotFoundException("Selected category not found (not found in the DB) id: " + categoryId));
             specification = specification.and(AdvertisementSpecifications.hasCategory(category));
         }
         if (maxPrice != null) {

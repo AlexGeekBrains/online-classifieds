@@ -5,6 +5,7 @@ import com.geekbrains.onlineclassifieds.dto.RoleConstants;
 import com.geekbrains.onlineclassifieds.entities.Role;
 import com.geekbrains.onlineclassifieds.entities.User;
 import com.geekbrains.onlineclassifieds.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(registrationUserDto.username());
         user.setEmail(registrationUserDto.email());
         user.setPassword(passwordEncoder.encode(registrationUserDto.password()));
-        user.setRoles(List.of(roleService.findByName(RoleConstants.ROLE_USER).get())); // instead of '.get()' can use 'orElseThrow(() -> new RoleNotFoundException(String.format("Role '%s' not found", constants.getROLE_USER())))'
+        user.setRoles(List.of(roleService.findByName(RoleConstants.ROLE_USER).orElseThrow(() -> new EntityNotFoundException(String.format("Role '%s' not found", RoleConstants.ROLE_USER)))));
         userRepository.save(user);
     }
 
