@@ -1,9 +1,13 @@
 package com.geekbrains.onlineclassifieds;
 
+import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
+import com.geekbrains.onlineclassifieds.dto.CategoryDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
+import com.geekbrains.onlineclassifieds.entities.Category;
 import com.geekbrains.onlineclassifieds.entities.User;
 import com.geekbrains.onlineclassifieds.repositories.AdvertisementRepository;
 import com.geekbrains.onlineclassifieds.services.AdvertisementServiceImpl;
+import com.geekbrains.onlineclassifieds.services.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +22,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -26,6 +32,9 @@ import static org.mockito.Mockito.*;
 public class AdvertisementServiceTest {
     @Mock
     private AdvertisementRepository advertisementRepository;
+
+    @Mock
+    private CategoryService categoryService;
 
     @InjectMocks
     private AdvertisementServiceImpl advertisementService;
@@ -56,5 +65,46 @@ public class AdvertisementServiceTest {
         verify(advertisementRepository, times(1)).findByExpirationDateBeforeAndIsDeletedFalse(any(), any());
         // Проверяем, что поля isDeleted стали равны true в каждом объявлении в списке expiredAdvertisements
         expiredAdvertisements.forEach(advertisement -> assertTrue(advertisement.getIsDeleted()));
+    }
+
+    @Test
+    public void testUpdateAdvertisementInfo() {
+
+        AdvertisementDto advertisementDto = new AdvertisementDto();
+        advertisementDto.setTitle("New Title");
+        advertisementDto.setDescription("New Description");
+        advertisementDto.setUserPrice(BigDecimal.valueOf(1000));
+        advertisementDto.setCategoryDto(new CategoryDto(2L,"New Category"));
+
+
+        // Создаем объект Advertisement для имитации репозитория
+        Long advertisementId = 1L;
+        Advertisement advertisement = new Advertisement();
+        advertisement.setId(advertisementId);
+        advertisement.setTitle("Old Title");
+        advertisement.setDescription("Old Description");
+        advertisement.setUserPrice(BigDecimal.valueOf(500));
+        Category category = new Category();
+        category.setName("Electronics");
+        advertisement.setCategory(category);
+
+        // Настройка имитации репозитория
+        when(advertisementRepository.findById(advertisementId)).thenReturn(Optional.of(advertisement));
+        when(categoryService.getCategoryByName(anyString())).thenReturn(Optional.of(category));
+
+        // Вызываем тестируемый метод
+        Advertisement updatedAdvertisement = advertisementService.updateAdvertisementInfo(advertisementId, advertisementDto);
+
+        // Проверяем, что объект Advertisement был изменен с использованием данных из Dto
+        assertEquals(advertisementDto.getTitle(), updatedAdvertisement.getTitle());
+        assertEquals(advertisementDto.getDescription(), updatedAdvertisement.getDescription());
+        assertEquals(advertisementDto.getUserPrice(), updatedAdvertisement.getUserPrice());
+        assertEquals(category, updatedAdvertisement.getCategory());
+
+        // Проверяем, что метод findById был вызван один раз с правильным id
+        verify(advertisementRepository, times(1)).findById(advertisementId);
+
+        // Проверяем, что метод getCategoryByName был вызван один раз с правильным именем категории
+        verify(categoryService, times(1)).getCategoryByName(advertisementDto.getCategoryDto().getName());
     }
 }
