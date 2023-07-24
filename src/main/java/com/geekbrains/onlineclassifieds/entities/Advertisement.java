@@ -54,7 +54,7 @@ public class Advertisement {
     @JsonIgnore
     private Collection<Payment> payments;
 
-   // @NonNull ToDo: decide how to work with categories
+    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "category_id")

@@ -1,5 +1,6 @@
 package com.geekbrains.onlineclassifieds.validators;
 
+import com.geekbrains.onlineclassifieds.exceptions.FieldsValidationException;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +27,7 @@ public class AdvertisementValidator {
             errors.add("Advertisement's category can't be blank");
         }
         if (!errors.isEmpty()) {
-            System.out.println(errors); // @ToDo: errors log
-            throw new IllegalArgumentException(String.join(", ", errors));
+            throw new FieldsValidationException(errors);
         }
     }
 }
