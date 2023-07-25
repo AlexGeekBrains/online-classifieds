@@ -57,13 +57,15 @@ CREATE TABLE users_roles (
 );
 
 INSERT INTO users (username, password, email, created_at, updated_at)
-VALUES ('john_doe', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'john.doe@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES ('john_doe', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'john.doe@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       ('Bob', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'Bob@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO roles (name, created_at, updated_at)
 VALUES ('ROLE_USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO users_roles (user_id, role_id)
-VALUES (1, 1);
+VALUES (1, 1),
+       (2, 1);
 
 INSERT INTO categories (name, created_at, updated_at)
 VALUES ('Electronics', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

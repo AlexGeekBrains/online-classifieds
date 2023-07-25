@@ -50,7 +50,12 @@ public class AdvertisementController {
         if (page < 1) {
             page = 1;
         }
-        Page<AdvertisementDto> filteredAdvertisements = advertisementService.findAllWithFilter(minPrice, maxPrice, partTitle, categoryId, page, true,true);
+        Page<AdvertisementDto> filteredAdvertisements = advertisementService.findAllWithFilter(minPrice, maxPrice, partTitle, categoryId, page, true, true);
         return ResponseEntity.ok(filteredAdvertisements);
+    }
+
+    @PostMapping("/{id}/mark-deleted")
+    public void markAdvertisementAsDeleted(@PathVariable Long id, Principal principal) {
+        advertisementService.markAdvertisementAsDeleted(id, principal.getName());
     }
 }
