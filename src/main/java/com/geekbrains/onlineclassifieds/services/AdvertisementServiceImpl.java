@@ -112,7 +112,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         });
     }
 
-    @Transactional
     @Override
     public void markAdvertisementAsDeleted(Long advertisementId, String username) {
         Advertisement advertisement = advertisementRepository.findById(advertisementId)
