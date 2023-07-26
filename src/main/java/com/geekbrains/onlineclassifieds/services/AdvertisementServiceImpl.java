@@ -5,6 +5,7 @@ import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.entities.Category;
 import com.geekbrains.onlineclassifieds.entities.User;
+import com.geekbrains.onlineclassifieds.exceptions.AdvertisementOwnershipException;
 import com.geekbrains.onlineclassifieds.repositories.AdvertisementRepository;
 import com.geekbrains.onlineclassifieds.repositories.specifications.AdvertisementSpecifications;
 import jakarta.persistence.EntityNotFoundException;
@@ -89,7 +90,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (partTitle != null) {
             specification = specification.and(AdvertisementSpecifications.titleLike(partTitle));
         }
-        return advertisementRepository.findAll(specification, PageRequest.of(page-1, 10)).map(advertisementConverter::entityToDto);
+        return advertisementRepository.findAll(specification, PageRequest.of(page - 1, 10)).map(advertisementConverter::entityToDto);
     }
 
     @Override
@@ -109,5 +110,15 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             advertisement.setIsDeleted(true);
             advertisementRepository.save(advertisement);
         });
+    }
+
+    @Override
+    public void markAdvertisementAsDeleted(Long advertisementId, String username) {
+        Advertisement advertisement = advertisementRepository.findById(advertisementId)
+                .orElseThrow(() -> new EntityNotFoundException("Can't delete advertisement (not found in the DB) id: " + advertisementId));
+        if (!advertisement.getUser().getUsername().equals(username)) {
+            throw new AdvertisementOwnershipException("Advertisement does not belong to the user who sent the request");
+        }
+        advertisement.setIsDeleted(true);
     }
 }

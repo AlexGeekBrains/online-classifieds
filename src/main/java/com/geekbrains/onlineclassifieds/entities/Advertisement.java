@@ -14,6 +14,8 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@EqualsAndHashCode(of = "id")
+@ToString
 @Table(name = "advertisements")
 public class Advertisement {
     @Id

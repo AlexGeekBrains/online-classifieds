@@ -2,6 +2,8 @@ package com.geekbrains.onlineclassifieds.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@EqualsAndHashCode(of = "id")
+@ToString
 @Table(name = "roles")
 public class Role {
     @Id

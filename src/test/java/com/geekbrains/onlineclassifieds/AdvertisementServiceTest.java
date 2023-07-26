@@ -5,9 +5,11 @@ import com.geekbrains.onlineclassifieds.dto.CategoryDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.entities.Category;
 import com.geekbrains.onlineclassifieds.entities.User;
+import com.geekbrains.onlineclassifieds.exceptions.AdvertisementOwnershipException;
 import com.geekbrains.onlineclassifieds.repositories.AdvertisementRepository;
 import com.geekbrains.onlineclassifieds.services.AdvertisementServiceImpl;
 import com.geekbrains.onlineclassifieds.services.CategoryService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,7 +54,9 @@ public class AdvertisementServiceTest {
                     false,
                     false,
                     LocalDateTime.now().minusDays(1),
-                    new User()));
+                    new User(),
+                    new Category()
+            ));
         }
         // Создаем страницу с просроченными объявлениями
         Page<Advertisement> expiredAdvertisementsPage = new PageImpl<>(expiredAdvertisements);
@@ -74,8 +77,7 @@ public class AdvertisementServiceTest {
         advertisementDto.setTitle("New Title");
         advertisementDto.setDescription("New Description");
         advertisementDto.setUserPrice(BigDecimal.valueOf(1000));
-        advertisementDto.setCategoryDto(new CategoryDto(2L,"New Category"));
-
+        advertisementDto.setCategoryDto(new CategoryDto(2L, "New Category"));
 
         // Создаем объект Advertisement для имитации репозитория
         Long advertisementId = 1L;
@@ -106,5 +108,59 @@ public class AdvertisementServiceTest {
 
         // Проверяем, что метод getCategoryByName был вызван один раз с правильным именем категории
         verify(categoryService, times(1)).getCategoryByName(advertisementDto.getCategoryDto().getName());
+    }
+
+    @Test
+    public void testMarkAdvertisementAsDeletedSuccessful() {
+        // Создаем тестовые данные
+        Long advertisementId = 1L;
+        String username = "testUser";
+        Advertisement advertisement = new Advertisement();
+        advertisement.setId(advertisementId);
+        advertisement.setIsDeleted(false);
+        User user = new User();
+        user.setUsername(username);
+        advertisement.setUser(user);
+
+        //  Настройка имитации репозитория
+        when(advertisementRepository.findById(advertisementId)).thenReturn(Optional.of(advertisement));
+
+        // Вызываем тестируемый метод
+        advertisementService.markAdvertisementAsDeleted(advertisementId, username);
+
+        // Проверяем, что метод setIsDeleted(true) был вызван у объекта advertisement
+        assertTrue(advertisement.getIsDeleted());
+    }
+
+    @Test
+    public void testMarkAdvertisementAsDeletedAdvertisementNotFound() {
+        // Создаем тестовые данные
+        Long advertisementId = 1L;
+        String username = "testUser";
+
+        //  Настройка имитации репозитория для ситуации, когда объявление не найдено
+        when(advertisementRepository.findById(advertisementId)).thenReturn(Optional.empty());
+
+        // Вызываем тестируемый метод и ожидаем исключение EntityNotFoundException
+        assertThrows(EntityNotFoundException.class, () -> advertisementService.markAdvertisementAsDeleted(advertisementId, username));
+    }
+
+    @Test
+    public void testMarkAdvertisementAsDeletedAdvertisementNotOwned() {
+        // Создаем тестовые данные
+        Long advertisementId = 1L;
+        String username = "testUser";
+        Advertisement advertisement = new Advertisement();
+        advertisement.setId(advertisementId);
+        advertisement.setIsDeleted(false);
+        User otherUser = new User();
+        otherUser.setUsername("otherUser"); // Устанавливаем другое имя пользователя
+        advertisement.setUser(otherUser);
+
+        //  Настройка имитации репозитория
+        when(advertisementRepository.findById(advertisementId)).thenReturn(Optional.of(advertisement));
+
+        // Вызываем тестируемый метод и ожидаем исключение AdvertisementOwnershipException
+        assertThrows(AdvertisementOwnershipException.class, () -> advertisementService.markAdvertisementAsDeleted(advertisementId, username));
     }
 }
