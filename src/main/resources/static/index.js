@@ -9,6 +9,7 @@ angular.module('app', []).controller('advertisementController', function ($scope
             params: {
                 page: pageIndex,
                 partTitle: $scope.filter ? $scope.filter.partTitle : null,
+                categoryId: $scope.filter ? $scope.filter.categoryId : null,
                 minPrice: $scope.filter ? $scope.filter.minPrice : null,
                 maxPrice: $scope.filter ? $scope.filter.maxPrice : null
             }
@@ -18,6 +19,7 @@ angular.module('app', []).controller('advertisementController', function ($scope
             $scope.currentPage =  $scope.advertisementsPage.number+1;
             $scope.AdvertisementsList = response.data.content;
             $scope.filter.partTitle = null;
+            $scope.filter.categoryId = null;
             $scope.filter.minPrice = null;
             $scope.filter.maxPrice = null;
 

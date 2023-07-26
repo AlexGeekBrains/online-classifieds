@@ -17,6 +17,7 @@
         <head>
         <tr>
             <th>ID</th>
+            <th>Категория [ID]</th>
             <th>Наименование</th>
             <th>Описание</th>
             <th>Цена</th>
@@ -25,6 +26,7 @@
         <tbody>
         <tr ng-repeat="p in AdvertisementsList">
             <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.id}}</a></td>
+            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.categoryDto.name}} [{{p.categoryDto.id}}]</a></td>
             <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.title}}</a></td>
             <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.description}}</a></td>
             <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.userPrice}}</a></td>
@@ -51,6 +53,8 @@
         <input class="form-control" type="number" placeholder="максимальной цене" ng-model="filter.maxPrice">
         <p></p>
         <input class="form-control" type="text" placeholder="наименованию товара" ng-model="filter.partTitle">
+        <p></p>
+        <input class="form-control" type="text" placeholder="id категории товара" ng-model="filter.categoryId">
         <p></p>
         <button type="submit" class="btn btn-primary">Применить фильтр</button>
     </form>
