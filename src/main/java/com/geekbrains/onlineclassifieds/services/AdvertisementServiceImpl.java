@@ -36,7 +36,17 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return userService.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("Selected username not found (not found in the DB): " + username));
     }
 
+    private void checkUserRights(Advertisement advertisement, String username) {
+        if (!username.equals(advertisement.getUser().getUsername())) {
+            User user = getByUsername(username);
+            if (user.getRoles().stream().noneMatch(r -> r.getName().equals(RoleConstants.ROLE_ADMIN))) {
+                throw new AdvertisementOwnershipException("Advertisement does not belong to the user who sent the request: you are not authorized to manipulate this advertisement");
+            }
+        }
+    }
+
     @Override
+    @Transactional
     public Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username) {
         User user = getByUsername(username);
         if (advertisementRepository.countByUserAndIsPaidAndIsDeleted(user, false ,false) >= AdvertisementConstants.FREE_ADVERTISEMENT_LIMIT) {
@@ -58,12 +68,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional
     public Advertisement updateAdvertisementInfo(Long id, AdvertisementDto advertisementDto, String username) {
         Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Can't update the product (not found in the DB) id: " + id));
-        if (!username.equals(advertisement.getUser().getUsername())) {
-            User user = getByUsername(username);
-            if (user.getRoles().stream().noneMatch(r -> r.getName().equals(RoleConstants.ROLE_ADMIN))) {
-                throw new AdvertisementOwnershipException("Advertisement does not belong to the user who sent the request: you are not authorized to edit this advertisement");
-            }
-        }
+        checkUserRights(advertisement, username);
         advertisement.setTitle(advertisementDto.getTitle());
         advertisement.setDescription(advertisementDto.getDescription());
         advertisement.setUserPrice(advertisementDto.getUserPrice());
@@ -85,6 +90,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
+    @Transactional
     public Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page, Boolean isNotDeleted, Boolean isNotExpiredYet) {
         Specification<Advertisement> specification = Specification.where(null);
         if (isNotDeleted != null && isNotDeleted) {
@@ -130,15 +136,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
+    @Transactional
     public void markAdvertisementAsDeleted(Long advertisementId, String username) {
         Advertisement advertisement = advertisementRepository.findById(advertisementId)
                 .orElseThrow(() -> new EntityNotFoundException("Can't delete advertisement (not found in the DB) id: " + advertisementId));
-        if (!advertisement.getUser().getUsername().equals(username)) {
-            User user = getByUsername(username);
-            if (user.getRoles().stream().noneMatch(r -> r.getName().equals(RoleConstants.ROLE_ADMIN))) {
-                throw new AdvertisementOwnershipException("Advertisement does not belong to the user who sent the request: you are not authorized to delete this advertisement");
-            }
-        }
+        checkUserRights(advertisement, username);
         advertisement.setIsDeleted(true);
     }
 }
