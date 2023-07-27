@@ -1,8 +1,10 @@
 package com.geekbrains.onlineclassifieds.services;
 
 import com.geekbrains.onlineclassifieds.converters.AdvertisementConverter;
+import com.geekbrains.onlineclassifieds.converters.PageConverter;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementConstants;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
+import com.geekbrains.onlineclassifieds.dto.PageResponseDto;
 import com.geekbrains.onlineclassifieds.dto.RoleConstants;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.entities.Category;
@@ -31,6 +33,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final AdvertisementConverter advertisementConverter;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final PageConverter pageConverter;
 
     private User getByUsername(String username) {
         return userService.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("Selected username not found (not found in the DB): " + username));
@@ -91,7 +94,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     @Transactional
-    public Page<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page, Boolean isNotDeleted, Boolean isNotExpiredYet) {
+    public PageResponseDto<AdvertisementDto> findAllWithFilter(BigDecimal minPrice, BigDecimal maxPrice, String partTitle, Long categoryId, Integer page, Boolean isNotDeleted, Boolean isNotExpiredYet) {
         Specification<Advertisement> specification = Specification.where(null);
         if (isNotDeleted != null && isNotDeleted) {
             specification = specification.and(AdvertisementSpecifications.isNotDeleted());
@@ -113,7 +116,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (partTitle != null) {
             specification = specification.and(AdvertisementSpecifications.titleLike(partTitle));
         }
-        return advertisementRepository.findAll(specification, PageRequest.of(page - 1, 10)).map(advertisementConverter::entityToDto);
+        return pageConverter.convertToCustomPage(advertisementRepository.findAll(specification, PageRequest.of(page - 1, 10))
+                .map(advertisementConverter::entityToDto));
     }
 
     @Override
