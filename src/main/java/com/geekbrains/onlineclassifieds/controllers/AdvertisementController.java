@@ -29,9 +29,9 @@ public class AdvertisementController {
     }
 
     @PutMapping("/{id}")
-    public AdvertisementDto updateAdvertisement(@PathVariable Long id, @RequestBody AdvertisementDto advertisementDto) {
+    public AdvertisementDto updateAdvertisement(@PathVariable Long id, @RequestBody AdvertisementDto advertisementDto, Principal principal) {
         advertisementValidator.validate(advertisementDto);
-        Advertisement advertisement = advertisementService.updateAdvertisementInfo(id, advertisementDto);
+        Advertisement advertisement = advertisementService.updateAdvertisementInfo(id, advertisementDto, principal.getName());
         return advertisementConverter.entityToDto(advertisement);
     }
 

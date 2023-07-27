@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public interface AdvertisementService {
     Advertisement saveNewAdvertisement(AdvertisementDto advertisementDto, String username);
 
-    Advertisement updateAdvertisementInfo(Long id, AdvertisementDto advertisementDto);
+    Advertisement updateAdvertisementInfo(Long id, AdvertisementDto advertisementDto, String username);
 
     void updateToPaid(Long id);
 

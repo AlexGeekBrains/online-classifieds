@@ -32,6 +32,7 @@ public class FakerGenerator {
         for (int i = 0; i < 20; i++) {
             advertisementRepository.save(generate(user, category));
         }
+        System.out.println(advertisementRepository.countByUserAndIsPaidAndIsDeleted(user, false, false));
     }
     public static Advertisement generate(User user, Category category) {
         Advertisement advertisement = new Advertisement();
