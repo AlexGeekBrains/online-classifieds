@@ -25,6 +25,8 @@ public class AdvertisementValidator {
         }
         if (advertisementDto.getCategoryDto() == null) {
             errors.add("Advertisement's category can't be blank");
+        } else if (advertisementDto.getCategoryDto().getName() == null) {
+            errors.add("Inconsistent category - no name specified");
         }
         if (!errors.isEmpty()) {
             throw new FieldsValidationException(errors);

@@ -57,13 +57,16 @@ CREATE TABLE users_roles (
 );
 
 INSERT INTO users (username, password, email, created_at, updated_at)
-VALUES ('john_doe', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'john.doe@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES ('john_doe', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'john.doe@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       ('Bob', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'Bob@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO roles (name, created_at, updated_at)
 VALUES ('ROLE_USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES ('ROLE_ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO users_roles (user_id, role_id)
-VALUES (1, 1);
+VALUES (1, 1),
+       (2, 1);
 
 INSERT INTO categories (name, created_at, updated_at)
 VALUES ('Electronics', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -73,6 +76,8 @@ VALUES ('Electronics', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 INSERT INTO advertisements (title, description, user_price, is_paid, is_deleted, expiration_date, user_id, category_id, created_at, updated_at)
 VALUES ('iPhone X', 'Brand new iPhone X', 999.99, true, false, NULL, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Sony TV', '55" Smart TV', 799.99, true, false, NULL, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       ('Tomato', 'Imported from Turkey', 9.99, false, true, CURRENT_TIMESTAMP, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       ('Potato', 'Support your local farmer', 3.99, true, true, CURRENT_TIMESTAMP, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Leather Jacket', 'Stylish leather jacket', 199.99, false, false, NULL, 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO payments (user_id, advertisement_id, date, description, created_at, updated_at)

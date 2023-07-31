@@ -35,4 +35,16 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(new SingleError(HttpStatus.FORBIDDEN.value(), e.getMessage()), HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<SingleError> catchAdvertisementOwnershipException(AdvertisementOwnershipException e) {
+        log.error("Advertisement ownership validation failed", e);
+        return new ResponseEntity<>(new SingleError(HttpStatus.FORBIDDEN.value(), e.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<SingleError> catchFreeLimitExceeded(FreeLimitExceededException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(new SingleError(HttpStatus.FORBIDDEN.value(), e.getMessage()), HttpStatus.FORBIDDEN);
+    }
 }
