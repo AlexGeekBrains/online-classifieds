@@ -20,31 +20,37 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ListError> catchValidationException(FieldsValidationException e) {
-        log.error(e.getMessage(), e);
+        log.info(e.getMessage(), e);
         return new ResponseEntity<>(new ListError(HttpStatus.BAD_REQUEST.value(), e.getErrorFieldsMessages()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<SingleError> catchBadCredentialsException(BadCredentialsException e) {
-        log.error(e.getMessage(), e);
+        log.info(e.getMessage(), e);
         return new ResponseEntity<>(new SingleError(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
     public ResponseEntity<SingleError> catchDisabledException(DisabledException e) {
-        log.error(e.getMessage(), e);
+        log.warn(e.getMessage(), e);
         return new ResponseEntity<>(new SingleError(HttpStatus.FORBIDDEN.value(), e.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler
     public ResponseEntity<SingleError> catchAdvertisementOwnershipException(AdvertisementOwnershipException e) {
-        log.error("Advertisement ownership validation failed", e);
+        log.warn("Advertisement ownership validation failed", e);
         return new ResponseEntity<>(new SingleError(HttpStatus.FORBIDDEN.value(), e.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler
-    public ResponseEntity<SingleError> catchFreeLimitExceeded(FreeLimitExceededException e) {
-        log.error(e.getMessage(), e);
+    public ResponseEntity<SingleError> catchFreeLimitExceededException(FreeLimitExceededException e) {
+        log.warn(e.getMessage(), e);
         return new ResponseEntity<>(new SingleError(HttpStatus.FORBIDDEN.value(), e.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<SingleError> catchUnavailableAdvertisement(UnavailableAdvertisement e) {
+        log.warn(e.getMessage(), e);
+        return new ResponseEntity<>(new SingleError(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

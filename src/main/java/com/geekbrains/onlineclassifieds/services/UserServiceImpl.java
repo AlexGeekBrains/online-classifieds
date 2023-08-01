@@ -50,6 +50,8 @@ public class UserServiceImpl implements UserService {
     public void createUser(RegistrationUserDto registrationUserDto) {
         User user = new User();
         user.setUsername(registrationUserDto.username());
+        user.setDisplayName(registrationUserDto.displayName());
+        user.setTelephone(registrationUserDto.telephone());
         user.setEmail(registrationUserDto.email());
         user.setPassword(passwordEncoder.encode(registrationUserDto.password()));
         user.setRoles(List.of(roleService.findByName(RoleConstants.ROLE_USER).orElseThrow(() -> new EntityNotFoundException(String.format("Role '%s' not found", RoleConstants.ROLE_USER)))));

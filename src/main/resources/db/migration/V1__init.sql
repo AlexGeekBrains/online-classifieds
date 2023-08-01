@@ -2,6 +2,8 @@ CREATE TABLE users (
   id bigserial primary key,
   username VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
+  display_name VARCHAR(255) NOT NULL,
+  telephone VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
@@ -56,9 +58,9 @@ CREATE TABLE users_roles (
   FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
-INSERT INTO users (username, password, email, created_at, updated_at)
-VALUES ('john_doe', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'john.doe@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('Bob', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'Bob@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO users (username, password, display_name, telephone, email, created_at, updated_at)
+VALUES ('john_doe', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'John America', '+1 505-JOHN', 'john.doe@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       ('Bob', '$2a$10$d9SaYo0LnMh2zp3rhuVTqOIGRnBy3VSMxnXpCopIPvBlMaxtoWBOu', 'ElvenRogue66', '+995 (587) 78-96-30', 'Bob@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO roles (name, created_at, updated_at)
 VALUES ('ROLE_USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

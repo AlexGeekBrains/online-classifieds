@@ -28,6 +28,12 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "display_name")
+    private String displayName;
+
+    @Column(name = "telephone", unique = true)
+    private String telephone;
+
     @Column(name = "email", unique = true)
     private String email;
 
