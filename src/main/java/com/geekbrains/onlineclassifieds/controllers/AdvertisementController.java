@@ -2,7 +2,9 @@ package com.geekbrains.onlineclassifieds.controllers;
 
 import com.geekbrains.onlineclassifieds.converters.AdvertisementConverter;
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
+import com.geekbrains.onlineclassifieds.dto.AdvertisementInfoDto;
 import com.geekbrains.onlineclassifieds.dto.PageResponseDto;
+import com.geekbrains.onlineclassifieds.dto.UserContactsDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 import com.geekbrains.onlineclassifieds.exceptions.ListError;
 import com.geekbrains.onlineclassifieds.exceptions.SingleError;
@@ -118,5 +120,33 @@ public class AdvertisementController {
     @PostMapping("/{id}/mark-deleted")
     public void markAdvertisementAsDeleted(@PathVariable Long id, Principal principal) {
         advertisementService.markAdvertisementAsDeleted(id, principal.getName());
+    }
+
+    @Operation(summary = "Show detailed info of the advertisement")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered advertisements",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AdvertisementInfoDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Not found",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SingleError.class))}),
+    })
+    @GetMapping("/get-advertisements/{id}")
+    // I made the method but later became unsure if it's needed. That might be Front's task to hide adv. description on Page and show when clicked - right now description is in AdvertisementDto. Just in case I will leave it here for now till there's front part.
+    public ResponseEntity<AdvertisementInfoDto> showDetailedInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(advertisementService.showDetailedInfo(id));
+    }
+
+    @Operation(summary = "Show contacts of the advertisement's owner")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Contacts have been shown",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserContactsDto.class))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Not found",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SingleError.class))}),
+
+    })
+    @SecurityRequirement(name = "JWT")
+    @GetMapping("/get-advertisements/{id}/contacts")
+    public ResponseEntity<UserContactsDto> showUserContacts(@PathVariable Long id) {
+        return ResponseEntity.ok(advertisementService.showUserContacts(id));
     }
 }

@@ -42,7 +42,7 @@ public class AuthenticationController {
 
     @PostMapping("/registration")
     public ResponseEntity<?> registerUser(@RequestBody RegistrationUserDto registrationUserDto) {
-        registrationValidator.validate(registrationUserDto); // ToDo: Front should be controlling it too
+        registrationValidator.validate(registrationUserDto); // Front should be controlling it too.
         userService.createUser(registrationUserDto);
         return ResponseEntity.ok("Registration successful! Please, log in.");
     }

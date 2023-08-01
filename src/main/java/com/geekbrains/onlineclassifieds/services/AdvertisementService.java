@@ -1,7 +1,9 @@
 package com.geekbrains.onlineclassifieds.services;
 
 import com.geekbrains.onlineclassifieds.dto.AdvertisementDto;
+import com.geekbrains.onlineclassifieds.dto.AdvertisementInfoDto;
 import com.geekbrains.onlineclassifieds.dto.PageResponseDto;
+import com.geekbrains.onlineclassifieds.dto.UserContactsDto;
 import com.geekbrains.onlineclassifieds.entities.Advertisement;
 
 import java.math.BigDecimal;
@@ -19,4 +21,8 @@ public interface AdvertisementService {
     void updateExpiredAdvertisements(LocalDateTime currentDateTime, int pageSize);
 
     void markAdvertisementAsDeleted(Long advertisementId, String username);
+
+    AdvertisementInfoDto showDetailedInfo(Long id);
+
+    UserContactsDto showUserContacts(Long id);
 }

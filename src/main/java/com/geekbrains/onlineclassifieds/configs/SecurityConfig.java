@@ -34,8 +34,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/api/v1/advertisements/get-advertisements").permitAll()
+                                .requestMatchers("/api/v1/advertisements/get-advertisements/*/contacts").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/advertisements").authenticated()
                                 .requestMatchers(HttpMethod.PUT, "/api/v1/advertisements").authenticated()
                                 .anyRequest().permitAll()
