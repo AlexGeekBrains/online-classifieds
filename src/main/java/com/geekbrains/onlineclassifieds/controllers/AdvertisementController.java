@@ -125,22 +125,21 @@ public class AdvertisementController {
     @Operation(summary = "Show detailed info of the advertisement")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered advertisements",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PageResponseDto.class))}),
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AdvertisementInfoDto.class))}),
             @ApiResponse(responseCode = "404", description = "Not found",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SingleError.class))}),
     })
     @GetMapping("/get-advertisements/{id}")
-    // ToDo: Ok, I made the method but later became unsure if it's needed. That might be Front's task to hide adv. description on Page and show when clicked - right now description is in AdvertisementDto. Just in case I will leave it here for now.
+    // I made the method but later became unsure if it's needed. That might be Front's task to hide adv. description on Page and show when clicked - right now description is in AdvertisementDto. Just in case I will leave it here for now till there's front part.
     public ResponseEntity<AdvertisementInfoDto> showDetailedInfo(@PathVariable Long id) {
         return ResponseEntity.ok(advertisementService.showDetailedInfo(id));
     }
 
     @Operation(summary = "Show contacts of the advertisement's owner")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Contacts have been shown"),
+            @ApiResponse(responseCode = "200", description = "Contacts have been shown",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserContactsDto.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-            @ApiResponse(responseCode = "403", description = "Forbidden",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SingleError.class))}),
             @ApiResponse(responseCode = "404", description = "Not found",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SingleError.class))}),
 

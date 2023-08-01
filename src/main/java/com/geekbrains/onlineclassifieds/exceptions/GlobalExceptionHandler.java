@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<SingleError> catchUnavailableAdvertisement(UnavailableAdvertisement e) {
+    public ResponseEntity<SingleError> catchUnavailableAdvertisementException(UnavailableAdvertisementException e) {
         log.warn(e.getMessage(), e);
         return new ResponseEntity<>(new SingleError(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
     }

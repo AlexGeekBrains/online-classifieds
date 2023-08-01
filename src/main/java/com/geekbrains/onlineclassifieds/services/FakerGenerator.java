@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-// That class is just for some fun testing. Disable if it's not needed for your purposes. ToDo: remove before production.
+// That class is just for some fun testing. Disable if it's not needed for your purposes.
 @Component
 @RequiredArgsConstructor
 public class FakerGenerator {

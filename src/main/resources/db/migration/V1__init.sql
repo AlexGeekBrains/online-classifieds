@@ -76,11 +76,11 @@ VALUES ('Electronics', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Furniture', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO advertisements (title, description, user_price, is_paid, is_deleted, expiration_date, user_id, category_id, created_at, updated_at)
-VALUES ('iPhone X', 'Brand new iPhone X', 999.99, true, false, NULL, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('Sony TV', '55" Smart TV', 799.99, true, false, NULL, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+VALUES ('iPhone X', 'Brand new iPhone X', 999.99, true, false, '2099-01-01 01:00:00', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       ('Sony TV', '55" Smart TV', 799.99, true, false, '2099-01-01 01:00:00', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Tomato', 'Imported from Turkey', 9.99, false, true, CURRENT_TIMESTAMP, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Potato', 'Support your local farmer', 3.99, true, true, CURRENT_TIMESTAMP, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('Leather Jacket', 'Stylish leather jacket', 199.99, false, false, NULL, 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+       ('Leather Jacket', 'Stylish leather jacket', 199.99, false, false, '2099-01-01 01:00:00', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO payments (user_id, advertisement_id, date, description, created_at, updated_at)
 VALUES (1, 1, CURRENT_TIMESTAMP, 'Payment for iPhone X', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

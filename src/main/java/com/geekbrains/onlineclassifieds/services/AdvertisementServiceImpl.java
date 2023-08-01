@@ -8,7 +8,7 @@ import com.geekbrains.onlineclassifieds.entities.Category;
 import com.geekbrains.onlineclassifieds.entities.User;
 import com.geekbrains.onlineclassifieds.exceptions.AdvertisementOwnershipException;
 import com.geekbrains.onlineclassifieds.exceptions.FreeLimitExceededException;
-import com.geekbrains.onlineclassifieds.exceptions.UnavailableAdvertisement;
+import com.geekbrains.onlineclassifieds.exceptions.UnavailableAdvertisementException;
 import com.geekbrains.onlineclassifieds.repositories.AdvertisementRepository;
 import com.geekbrains.onlineclassifieds.repositories.specifications.AdvertisementSpecifications;
 import jakarta.persistence.EntityNotFoundException;
@@ -57,7 +57,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         User user = getUserByUsername(username);
         if (advertisementRepository.countByUserAndIsPaidAndIsDeleted(user, false ,false) >= AdvertisementConstants.FREE_ADVERTISEMENT_LIMIT) {
             throw new FreeLimitExceededException(String.format("Sorry, maximum %s free advertisements allowed. Please, consider upgrading to payed or deleting old advertisements", AdvertisementConstants.FREE_ADVERTISEMENT_LIMIT));
-            // ToDo: might also need Data-Time check/query, depending on the scheduled task.
         }
         advertisementDto.setExpirationDate(LocalDateTime.now().plusDays(1));
         advertisementDto.setIsPaid(false);
@@ -87,12 +86,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional
     public void updateToPaid(Long id) {
         Advertisement advertisement = getAdvertisementById(id);
-        advertisement.setIsPaid(true);
-        if (advertisement.getExpirationDate() == null) { // ToDo: Idea says it can't be null, which is technically true; but it is created null in initialization. Temporary.
-            advertisement.setExpirationDate(LocalDateTime.now().plusDays(7));
-        } else {
-            advertisement.setExpirationDate(advertisement.getExpirationDate().plusDays(7)); // ToDo: days added should depend on the payment
+        if (advertisement.getExpirationDate().plusHours(1).isAfter(LocalDateTime.now().plusDays(AdvertisementConstants.MAXIMUM_PAYED_LENGTH))) {
+            throw new UnavailableAdvertisementException(String.format("You don't need to pay for the advertisement (id: %s) now. It already has its maximum duration available.", id));
         }
+        advertisement.setIsPaid(true);
+        advertisement.setExpirationDate(advertisement.getExpirationDate().plusDays(AdvertisementConstants.DAYS_GRANTED_BY_PAYMENT));
     }
 
     @Override
@@ -165,7 +163,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional
     public UserContactsDto showUserContacts(Long id) {
         Advertisement advertisement = getAdvertisementById(id);
-        if (advertisement.getIsDeleted()) throw new UnavailableAdvertisement(String.format("The advertisement with id %s has expired or was deleted.", id));
+        if (advertisement.getIsDeleted()) throw new UnavailableAdvertisementException(String.format("The advertisement with id %s has expired or was deleted.", id));
         User user = advertisement.getUser();
         return new UserContactsDto(
                 user.getDisplayName(),
