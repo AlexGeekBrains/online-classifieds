@@ -32,5 +32,7 @@ angular.module('app', []).controller('advertisementController', function ($scope
         return arr;
     }
 
+
     $scope.loadAdvertisements();
+
 });
