@@ -53,15 +53,8 @@
     <label for="userRePassword">RePassword</label>
     <input type="password" class="form-control" ng-model="newUser.confirmPassword" id="userRePassword">
   </div>
-    <button type="submit" class="btn btn-primary" id="reg" onClick = "check()" ng-click="addUser()">Регистрация</button>
+    <button type="submit" class="btn btn-primary" ng-click="addUser()">Регистрация</button>
   </form>
-  <script>
-  function check(){
-    if(document.getElementById('userPassword').value == document.getElementById('userRePassword').value)
-    else
-        alert('Пароли не совпадают');
-    }
-</script>
 </div>
 </body>
 </html>
