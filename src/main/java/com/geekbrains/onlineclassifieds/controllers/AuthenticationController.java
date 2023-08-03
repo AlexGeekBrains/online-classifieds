@@ -2,12 +2,12 @@ package com.geekbrains.onlineclassifieds.controllers;
 
 import com.geekbrains.onlineclassifieds.dto.JwtRequest;
 import com.geekbrains.onlineclassifieds.dto.JwtResponse;
+import com.geekbrains.onlineclassifieds.dto.RegistrationResponseDto;
 import com.geekbrains.onlineclassifieds.dto.RegistrationUserDto;
 import com.geekbrains.onlineclassifieds.services.UserService;
 import com.geekbrains.onlineclassifieds.utils.JwtTokenUtil;
 import com.geekbrains.onlineclassifieds.validators.RegistrationValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,37 +31,20 @@ public class AuthenticationController {
 
     @PostMapping()
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
-        try {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        } catch (DisabledException e) {
-            throw new DisabledException("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("INVALID_CREDENTIALS", e);
-        }
-
         final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
     private void authenticate(String username, String password) throws DisabledException,BadCredentialsException {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registerUser(@RequestBody RegistrationUserDto registrationUserDto) {
-        registrationValidator.validate(registrationUserDto); // ToDo: Front should be controlling it too
-        if (!registrationUserDto.password().equals(registrationUserDto.confirmPassword())) {
-            return new ResponseEntity<>("Passwords don't match, please try again!", HttpStatus.BAD_REQUEST);
-        }
-        if (userService.findByUsername(registrationUserDto.username()).isPresent()) {
-            return new ResponseEntity<>("Username is taken, please try another one!", HttpStatus.BAD_REQUEST);
-        }
-        if (userService.findUserByEmail(registrationUserDto.email()).isPresent()) {
-            return new ResponseEntity<>("Email is already registered, please restore password if needed!", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<RegistrationResponseDto> registerUser(@RequestBody RegistrationUserDto registrationUserDto) {
+        registrationValidator.validate(registrationUserDto); // Front should be controlling it too.
         userService.createUser(registrationUserDto);
-        return ResponseEntity.ok("Registration successful! Please, log in.");
+        return ResponseEntity.ok(new RegistrationResponseDto("Registration successful! Please, log in."));
     }
 }

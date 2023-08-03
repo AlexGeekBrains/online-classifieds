@@ -3,6 +3,8 @@ package com.geekbrains.onlineclassifieds.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,6 +13,8 @@ import java.util.Collection;
 
 @Entity
 @Data
+@EqualsAndHashCode(of = "id")
+@ToString
 @Table(name = "users")
 public class User {
     @Id
@@ -23,6 +27,12 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "display_name")
+    private String displayName;
+
+    @Column(name = "telephone", unique = true)
+    private String telephone;
 
     @Column(name = "email", unique = true)
     private String email;

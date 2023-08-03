@@ -14,6 +14,8 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@EqualsAndHashCode(of = "id")
+@ToString
 @Table(name = "advertisements")
 public class Advertisement {
     @Id
@@ -54,7 +56,7 @@ public class Advertisement {
     @JsonIgnore
     private Collection<Payment> payments;
 
-   // @NonNull ToDo: decide how to work with categories
+    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "category_id")

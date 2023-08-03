@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html ng-app="app">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+  <script src="registration.js"></script>
+</head>
+
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-link">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Доска объявлений</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" ng-controller="regController">
+  <form>
+    <div class="form-group">
+      <label>Имя пользователя</label>
+      <input type="text" class="form-control" ng-model="newUser.username"/>
+    </div>
+    <div class="form-group">
+      <label>Ник</label>
+      <input type="text" class="form-control" ng-model="newUser.displayName"/>
+    </div>
+    <div class="form-group">
+      <label>Телефон</label>
+      <input type="number" class="form-control" ng-model="newUser.telephone"/>
+    </div>
+    <div class="form-group">
+      <label for="userEmail">Email</label>
+      <input type="email" class="form-control" ng-model="newUser.email" id="userEmail" aria-describedby="emailHelp">
+    </div>
+    <div class="form-group">
+      <label for="userPassword">Password</label>
+      <input type="password" class="form-control" ng-model="newUser.password" id="userPassword">
+    </div>
+    <div class="form-group">
+    <label for="userRePassword">RePassword</label>
+    <input type="password" class="form-control" ng-model="newUser.confirmPassword" id="userRePassword">
+  </div>
+    <button type="submit" class="btn btn-primary" ng-click="addUser()">Регистрация</button>
+  </form>
+</div>
+</body>
+</html>

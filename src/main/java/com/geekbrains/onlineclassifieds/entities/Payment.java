@@ -3,6 +3,8 @@ package com.geekbrains.onlineclassifieds.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@EqualsAndHashCode(of = "id")
+@ToString
 @Table(name = "payments")
 public class Payment {
     @Id
