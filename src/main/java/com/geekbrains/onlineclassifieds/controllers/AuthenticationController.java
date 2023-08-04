@@ -2,6 +2,7 @@ package com.geekbrains.onlineclassifieds.controllers;
 
 import com.geekbrains.onlineclassifieds.dto.JwtRequest;
 import com.geekbrains.onlineclassifieds.dto.JwtResponse;
+import com.geekbrains.onlineclassifieds.dto.RegistrationResponseDto;
 import com.geekbrains.onlineclassifieds.dto.RegistrationUserDto;
 import com.geekbrains.onlineclassifieds.services.UserService;
 import com.geekbrains.onlineclassifieds.utils.JwtTokenUtil;
@@ -37,13 +38,13 @@ public class AuthenticationController {
     }
 
     private void authenticate(String username, String password) throws DisabledException,BadCredentialsException {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registerUser(@RequestBody RegistrationUserDto registrationUserDto) {
-        registrationValidator.validate(registrationUserDto); // ToDo: Front should be controlling it too
+    public ResponseEntity<RegistrationResponseDto> registerUser(@RequestBody RegistrationUserDto registrationUserDto) {
+        registrationValidator.validate(registrationUserDto); // Front should be controlling it too.
         userService.createUser(registrationUserDto);
-        return ResponseEntity.ok("Registration successful! Please, log in.");
+        return ResponseEntity.ok(new RegistrationResponseDto("Registration successful! Please, log in."));
     }
 }
