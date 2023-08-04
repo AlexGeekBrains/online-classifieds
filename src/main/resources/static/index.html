@@ -31,6 +31,7 @@
         <head>
         <tr>
             <th>ID</th>
+            <th>Категория</th>
             <th>Наименование</th>
             <th>Описание</th>
             <th>Цена</th>
@@ -38,10 +39,11 @@
         </head>
         <tbody>
         <tr ng-repeat="p in AdvertisementsList">
-            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}' ng-click='{{p.id}}'>{{p.id}}</a></td>
-            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'ng-click='{{p.id}}'>{{p.title}}</a></td>
-            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}' ng-click='{{p.id}}'>{{p.description}}</a></td>
-            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}' ng-click='{{p.id}}'>{{p.userPrice}}</a></td>
+            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.id}}</a></td>
+            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.categoryDto.name}}</a></td>
+            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.title}}</a></td>
+            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.description}}</a></td>
+            <td><a style="display: block; text-decoration: none; color: black;" ng-href='advertisement.html?id={{p.id}}'>{{p.userPrice}}</a></td>
         </tr>
         </tbody>
     </table>
@@ -65,6 +67,8 @@
         <input class="form-control" type="number" placeholder="максимальной цене" ng-model="filter.maxPrice">
         <p></p>
         <input class="form-control" type="text" placeholder="наименованию товара" ng-model="filter.partTitle">
+        <p></p>
+        <select class="form-control" ng-model="filter.selectedCategory" ng-options="category.name for category in categories"> <option value="">Выберите категорию</option> </select>
         <p></p>
         <button type="submit" class="btn btn-primary">Применить фильтр</button>
     </form>
